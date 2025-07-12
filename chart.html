@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>重金属含量动态对比</title>
+    <!-- 引入Plotly.js库 -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <!-- 图表容器 -->
+    <div id="plot" style="width:100%;height:500px;"></div>
+
+    <script>
+        // 定义图表数据
+        const plotData = [
+            {
+                x: ['V', 'Cr', 'Ni', 'Cu', 'Zn', 'As', 'Cd', 'Hg', 'Pb'],
+                y: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                name: 'Group1',
+                type: 'bar',
+                marker: {color: '#1f77b4'}
+            },
+            {
+                x: ['V', 'Cr', 'Ni', 'Cu', 'Zn', 'As', 'Cd', 'Hg', 'Pb'],
+                y: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+                name: 'Group2',
+                type: 'bar',
+                marker: {color: '#ff7f0e'}
+            }
+        ];
+
+        // 定义图表布局
+        const layout = {
+            barmode: 'group',
+            title: '重金属含量动态对比',
+            xaxis: {title: '元素'},
+            yaxis: {
+                title: '含量 (mg/kg)',
+                range: [0, 100]
+            },
+            hovermode: 'x unified'
+        };
+
+        // 创建基础图表
+        Plotly.newPlot('plot', plotData, layout);
+
+        // 定义动画帧数据（时间点0和时间点1）
+        const frames = [
+            {
+                name: '0',
+                data: [
+                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]},  // Time=0, Group1
+                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]}   // Time=0, Group2
+                ]
+            },
+            {
+                name: '1',
+                data: [
+                    {y: [2.95, 34.69, 13.80, 10.18, 72.64, 1.92, 0.56, 0.01, 9.91]},  // Time=1, Group1
+                    {y: [5.18, 36.24, 27.86, 18.87, 80.79, 2.62, 0.64, 0.04, 19.87]}   // Time=1, Group2
+                ]
+            }
+        ];
+
+        // 添加动画帧
+        Plotly.addFrames('plot', frames);
+
+        // 设置动画控制按钮
+        layout.updatemenus = [
+            {
+                type: 'buttons',
+                showactive: false,
+                buttons: [
+                    {
+                        label: '播放',
+                        method: 'animate',
+                        args: [
+                            null,
+                            {
+                                frame: {duration: 2000, redraw: false},  // 每帧持续2秒
+                                transition: {duration: 1000},             // 过渡动画1秒
+                                fromcurrent: true,
+                                mode: 'immediate'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // 更新图表布局，添加动画控制
+        Plotly.update('plot', {}, layout);
+    </script>
+</body>
+</html>
