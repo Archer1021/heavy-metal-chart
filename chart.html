@@ -3,12 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>重金属含量动态对比</title>
-    <!-- 引入Plotly.js库 -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        /* 使用CSS Grid布局来控制图表比例 */
+        .chart-container {
+            display: grid;
+            grid-template-rows: 1fr;
+            gap: 10px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #plot {
+            width: 100%;
+            height: 800px; /* 增加容器高度 */
+        }
+    </style>
 </head>
 <body>
-    <!-- 图表容器 -->
-    <div id="plot" style="width:100%;height:500px;"></div>
+    <div class="chart-container">
+        <div id="plot"></div>
+    </div>
 
     <script>
         // 定义图表数据
@@ -33,31 +48,47 @@
         const layout = {
             barmode: 'group',
             title: '重金属含量动态对比',
-            xaxis: {title: '元素'},
+            xaxis: {
+                title: '元素',
+                automargin: true
+            },
             yaxis: {
                 title: '含量 (mg/kg)',
-                range: [0, 100]
+                range: [0, 100], // 保持范围不变
+                automargin: true,
+                dtick: 10 // 增加刻度密度
             },
-            hovermode: 'x unified'
+            hovermode: 'x unified',
+            margin: {
+                l: 80, // 增加左边距
+                r: 40,
+                b: 80, // 增加下边距
+                t: 80, // 增加上边距
+                pad: 10
+            },
+            height: 800, // 与容器高度匹配
+            font: {
+                size: 14 // 增加字体大小
+            }
         };
 
         // 创建基础图表
         Plotly.newPlot('plot', plotData, layout);
 
-        // 定义动画帧数据（时间点0和时间点1）
+        // 定义动画帧数据
         const frames = [
             {
                 name: '0',
                 data: [
-                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]},  // Time=0, Group1
-                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]}   // Time=0, Group2
+                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]},
+                    {y: [0, 0, 0, 0, 0, 0, 0, 0, 0]}
                 ]
             },
             {
                 name: '1',
                 data: [
-                    {y: [2.95, 34.69, 13.80, 10.18, 72.64, 1.92, 0.56, 0.01, 9.91]},  // Time=1, Group1
-                    {y: [5.18, 36.24, 27.86, 18.87, 80.79, 2.62, 0.64, 0.04, 19.87]}   // Time=1, Group2
+                    {y: [2.95, 34.69, 13.80, 10.18, 72.64, 1.92, 0.56, 0.01, 9.91]},
+                    {y: [5.18, 36.24, 27.86, 18.87, 80.79, 2.62, 0.64, 0.04, 19.87]}
                 ]
             }
         ];
@@ -77,18 +108,22 @@
                         args: [
                             null,
                             {
-                                frame: {duration: 2000, redraw: false},  // 每帧持续2秒
-                                transition: {duration: 1000},             // 过渡动画1秒
+                                frame: {duration: 2000, redraw: false},
+                                transition: {duration: 1000},
                                 fromcurrent: true,
                                 mode: 'immediate'
                             }
                         ]
                     }
-                ]
+                ],
+                x: 0.05, // 调整按钮位置
+                y: -0.1,
+                xanchor: 'left',
+                yanchor: 'top'
             }
         ];
 
-        // 更新图表布局，添加动画控制
+        // 更新图表布局
         Plotly.update('plot', {}, layout);
     </script>
 </body>
